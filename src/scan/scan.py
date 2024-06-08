@@ -1,8 +1,9 @@
 """
 The scan class holds the actual scanner instance
 """
+import os
 import random
-import shutil
+from PIL import Image
 
 from src.connection.connection import Connection
 
@@ -29,16 +30,30 @@ class Scanner:
 
         return devices
 
-    def scan(self, output_name: str = "test.png"):
+    def scan(self, output_name: str = "test.pdf"):
         """Scan an image, saving it locally to output_name"""
         filename = "".join([str(random.randint(0, 9)) for i in range(16)]) + ".png"
-        self.conn.cmd(f"scanimage --format png --output-file {filename} --progress", stream=True)
+        print("Requesting a scan...")
+        self.conn.cmd(
+            f"scanimage "
+            f"--format png "
+            f"--resolution 300 "
+            f"--output-file {filename} "
+            f"--progress",
+            stream=True
+        )
 
         self.conn.cmd(f"scp {self.conn.userhost}:{filename} .", local=True)
 
         self.conn.cmd(f"rm {filename}")
 
-        shutil.move(filename, output_name)
+        img = Image.open(filename)
+        img.save(fp=output_name, format="PDF")
+
+        try:
+            os.remove(filename)
+        except FileNotFoundError:
+            print(f"temporary file not found at: {filename}")
 
 
 if __name__ == "__main__":

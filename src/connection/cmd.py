@@ -21,7 +21,7 @@ class CMD:
         self._stderr = None
         self._returncode = None
 
-    def exec(self, passthrough: bool = False) -> None:
+    def exec(self, stream: bool = False) -> None:
         """
         Generates a subprocess instance to execute the stored command
         """
@@ -36,12 +36,12 @@ class CMD:
             stdout_cache = []
             stdout_thread = threading.Thread(
                 target=stream_capture,
-                args=[proc.stdout, stdout_cache, passthrough]
+                args=[proc.stdout, stdout_cache, stream]
             )
             stderr_cache = []
             stderr_thread = threading.Thread(
                 target=stream_capture,
-                args=[proc.stderr, stderr_cache, passthrough]
+                args=[proc.stderr, stderr_cache, stream]
             )
 
             stdout_thread.start()
@@ -89,13 +89,9 @@ def stream_capture(pipe, cache: list, passthrough: bool = False) -> None:
         None
     """
     for line in iter(pipe.readline, ""):
-        pre = ""
-        end = "\n"
-
-        tmp = pre + line.rstrip("\n") + end
-        cache.append(tmp)
         if passthrough:
-            print(tmp, end="")
+            print(line, end="")
+        cache.append(line)
 
 
 if __name__ == "__main__":
@@ -106,6 +102,4 @@ done
 """
 
     test = CMD(TEST_CMD)
-    test.exec(passthrough=False)
-
-    print(test.stdout)
+    test.exec(stream=True)

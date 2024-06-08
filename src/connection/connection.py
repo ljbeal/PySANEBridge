@@ -46,7 +46,8 @@ class Connection:
         return f"{self.user}@{self.host}"
 
     def cmd(
-            self, cmd: str,
+            self,
+            cmd: str,
             local: bool = False,
             verbose: bool = False,
             stream: bool = False,
@@ -67,7 +68,7 @@ class Connection:
             print(f"executing command {cmd}")
 
         self._cmd_obj = CMD(cmd)
-        self._cmd_obj.exec(passthrough=stream)
+        self._cmd_obj.exec(stream=stream)
 
         return self._cmd_obj
 

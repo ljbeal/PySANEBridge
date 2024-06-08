@@ -30,14 +30,14 @@ class Scanner:
 
         return devices
 
-    def scan(self, output_name: str = "test.pdf"):
+    def scan(self, output_name: str = "test.pdf", resolution: int = 300):
         """Scan an image, saving it locally to output_name"""
         filename = "".join([str(random.randint(0, 9)) for i in range(16)]) + ".png"
         print("Requesting a scan...")
         self.conn.cmd(
             f"scanimage "
             f"--format png "
-            f"--resolution 300 "
+            f"--resolution {resolution} "
             f"--output-file {filename} "
             f"--progress",
             stream=True

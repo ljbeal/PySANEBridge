@@ -1,3 +1,7 @@
+"""
+The Connection class handles ssh calls to the remote host
+"""
+
 from src.connection.cmd import CMD
 
 
@@ -41,18 +45,34 @@ class Connection:
             return self.host
         return f"{self.user}@{self.host}"
 
-    def cmd(self, cmd: str, local: bool = False) -> str | None:
+    def cmd(
+            self, cmd: str,
+            local: bool = False,
+            verbose: bool = False,
+            stream: bool = False,
+    ) -> CMD:
         """
         Execute a command on the remote machine
 
         Args:
             cmd: cmd string to execute
             local: Executes locally if True (optional, default: False)
+            verbose: Prints verbose info if True
+            stream: Stream output if True, default False
         """
         if not local:
             cmd = f'ssh {self.userhost} "{cmd}"'
 
-        self._cmd_obj = CMD(cmd)
-        self._cmd_obj.exec()
+        if verbose:
+            print(f"executing command {cmd}")
 
-        return self._cmd_obj.stdout
+        self._cmd_obj = CMD(cmd)
+        self._cmd_obj.exec(passthrough=stream)
+
+        return self._cmd_obj
+
+
+if __name__ == "__main__":
+    test = Connection("pi@192.168.0.8")
+
+    print(test.cmd("pwd").stdout)

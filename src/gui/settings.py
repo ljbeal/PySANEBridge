@@ -1,6 +1,7 @@
 """
 Module for a self healing settings file
 """
+from typing import Any
 
 
 class Settings:
@@ -79,18 +80,24 @@ class Settings:
             for k, v in data.items():
                 o.write(f"{k}: {v}\n")
 
-    def __setattr__(self, key, value):
-        if key in Settings.__slots__:
-            object.__setattr__(self, key, value)
-            return
+    def set(self, key: str, value: Any):
+        """
+        Set a value
 
+        Args:
+            key: key to set
+            value: value to set
+        """
         data = self.file_data
         data[key] = value
 
         self.dump_data(data)
 
-    def __getattr__(self, item):
-        if item in Settings.__slots__:
-            return object.__getattribute__(self, item)
+    def get(self, item: str) -> Any:
+        """
+        Get a setting
 
+        Arg:
+            item: item to fetch
+        """
         return self.file_data[item]

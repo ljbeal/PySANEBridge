@@ -30,7 +30,8 @@ class Scanner:
 
         return devices
 
-    def _scan(self, resolution: int = 300) -> Image:
+    def scan_image(self, resolution: int = 300) -> Image:
+        """Request a scan and return it as a PIL Image"""
         filename = "".join([str(random.randint(0, 9)) for i in range(16)]) + ".png"
         print("Requesting a scan...")
         self.conn.cmd(
@@ -55,13 +56,13 @@ class Scanner:
 
         return img
 
-    def scan(self, output_name: str = "test.pdf", resolution: int = 300) -> None:
+    def scan_and_save(self, output_name: str = "test.pdf", resolution: int = 300) -> None:
         """Scan an image, saving it locally to output_name"""
-        img = self._scan(resolution)
+        img = self.scan_image(resolution)
         img.save(fp=output_name, format="PDF")
 
 
 if __name__ == "__main__":
     machine = Scanner("pi@192.168.0.8")
 
-    machine.scan(resolution=100)
+    machine.scan_and_save(resolution=100)

@@ -10,7 +10,14 @@ from src.scan.scan import Scanner
 @click.command()
 @click.option("--filename", default="scan.pdf", help="output filename")
 @click.option("--resolution", default=300, help="specify resolution in dpi")
-def scan(filename: str = "scan.pdf", resolution=300):
+def scan(filename: str = "scan.pdf", resolution: int = 300):
+    """
+    Repeatedly scan and ask for continuation
+
+    Args:
+        filename: Output file name
+        resolution: scan resolution in dpi
+    """
     scanner = Scanner("pi@192.168.0.8")
 
     continue_scanning = True
@@ -28,7 +35,7 @@ def scan(filename: str = "scan.pdf", resolution=300):
 def ask_continue(scanner, **scan_args) -> (bool, Image):
     """Ask if the user wants to continue scanning"""
 
-    image = scanner._scan(**scan_args)
+    image = scanner.scan_image(**scan_args)
 
     cont = input("Scanned 1 image, continue? [Y/N] ")
     if cont.lower() not in ["y", "n"]:

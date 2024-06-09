@@ -1,7 +1,6 @@
 """
 Module for a self healing settings file
 """
-import re
 
 
 class Settings:
@@ -48,7 +47,7 @@ class Settings:
         """Return the file content as a dictionary"""
         data = {}
         try:
-            with open(self.file) as o:
+            with open(self.file, encoding="UTF-8") as o:
                 lines = o.readlines()
         except FileNotFoundError:
             lines = []
@@ -76,7 +75,7 @@ class Settings:
 
     def dump_data(self, data: dict):
         """Dump data to file"""
-        with open(self.file, "w+") as o:
+        with open(self.file, "w+", encoding="UTF-8") as o:
             for k, v in data.items():
                 o.write(f"{k}: {v}\n")
 

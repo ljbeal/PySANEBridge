@@ -7,3 +7,4 @@
 *.ini
 pySANEBridge.egg-info/top_level.txt
 *.pdf
+*.png

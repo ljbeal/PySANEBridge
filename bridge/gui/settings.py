@@ -61,7 +61,11 @@ class Settings:
             val = val.lower().strip()
 
             try:
-                if "." in val:
+                if val.lower() == "true":
+                    val = True
+                elif val.lower() == "false":
+                    val = False
+                elif "." in val:
                     val = float(val)
                 else:
                     val = int(val)

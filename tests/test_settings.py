@@ -31,6 +31,18 @@ class TestSettings(unittest.TestCase):
         assert self.settings.get('resolution') == 600
         assert self.settings.file_data["resolution"] == 600
 
+    def test_boolean(self):
+        self.settings.set("bool", "True")
+
+        assert self.settings.get("bool")
+        assert self.settings.file_data["bool"] == True
+
+    def test_false_boolean(self):
+        self.settings.set("bool", "False")
+
+        assert not self.settings.get("bool"), print(self.settings.get("bool"))
+        assert self.settings.file_data["bool"] == False
+
     def tearDown(self):
         """Tear down test structures"""
         os.remove(self.filepath)

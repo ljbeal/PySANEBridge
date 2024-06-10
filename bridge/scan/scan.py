@@ -32,6 +32,10 @@ class Scanner:
 
     def scan_image(self, resolution: int = 300) -> Image:
         """Request a scan and return it as a PIL Image"""
+
+        if resolution < 75:
+            raise ValueError(f"resolution {resolution} <= 75")
+
         filename = "".join([str(random.randint(0, 9)) for i in range(16)]) + ".png"
         print("Requesting a scan...")
         self.conn.cmd("pwd")

@@ -60,6 +60,9 @@ class Scanner:
             print(f"Error, file not found at: {filename}")
         except PermissionError:
             print(f"Error, could not delete file at: {filename}")
+        except Exception as ex:
+            print(f"Unhandled exception: {str(ex)}")
+            raise
 
         return img
 

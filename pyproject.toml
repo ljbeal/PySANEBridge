@@ -15,7 +15,8 @@ classifiers = [
 dynamic = ['version']
 
 dependencies = [
-    "pyqt6"
+    "pyqt6",
+    "click"
 ]
 
 [build-system]

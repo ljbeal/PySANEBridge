@@ -16,7 +16,8 @@ dynamic = ['version']
 
 dependencies = [
     "pyqt6",
-    "click"
+    "click",
+    "pillow"
 ]
 
 [build-system]

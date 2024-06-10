@@ -52,11 +52,14 @@ class Scanner:
         self.conn.cmd(f"rm {filename}")
         print("\tReading in image")
         img = Image.open(filename)
-
+        print("\tDeleting temporary file...", end = " ")
         try:
             os.remove(filename)
+            print("Done.")
         except FileNotFoundError:
-            print(f"temporary file not found at: {filename}")
+            print(f"Error, file not found at: {filename}")
+        except PermissionError:
+            print(f"Error, could not delete file at: {filename}")
 
         return img
 

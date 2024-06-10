@@ -122,7 +122,7 @@ class MainWindow(QMainWindow):
 
         filename = name_entry.text()
 
-        filename = f"{os.path.splittext(filename)}.pdf"  # force pdf
+        filename = f"{os.path.splitext(filename)[0]}.pdf"  # force pdf
 
         print(f"Saving image out to {filename}")
         images[0].save(fp=filename, format="PDF", save_all=True, append_images=images[1:])

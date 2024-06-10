@@ -31,7 +31,7 @@ class CMD:
             stderr=subprocess.PIPE,
             shell=True,
             text=True,
-            executable="bash"
+            # executable="bash"
         ) as proc:
             stdout_cache = []
             stdout_thread = threading.Thread(

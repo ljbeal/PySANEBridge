@@ -131,6 +131,8 @@ class MainWindow(QMainWindow):
         ask_filename.exec()
 
         filename = name_entry.text()
+        if filename == "": 
+            return
 
         filename = f"{os.path.splitext(filename)[0]}.pdf"  # force pdf
 

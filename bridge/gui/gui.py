@@ -3,9 +3,11 @@ UI module
 """
 
 
-from PyQt6.QtGui import QAction
-from PyQt6.QtWidgets import QLabel, QWidget, QMainWindow, QGridLayout, QHBoxLayout, QMenu, QToolBar, QPushButton, \
-    QLineEdit, QDialog
+import os
+from PyQt6.QtGui import QAction, QPixmap
+from PyQt6.QtWidgets import QLabel, QWidget, QMainWindow, QGridLayout, QVBoxLayout, QHBoxLayout, QMenu, QToolBar, QPushButton, \
+    QLineEdit, QDialog, QScrollArea
+from PIL.ImageQt import ImageQt
 
 from bridge.gui.settings import Settings
 from bridge.scan.scan import Scanner
@@ -26,6 +28,10 @@ class MainWindow(QMainWindow):
 
         self.setWindowTitle("Scanner SANE Bridge")
         self.setGeometry(100, 100, 600, 400)
+
+        self.images = []
+        self.imageArea = QScrollArea(self)
+        self.setCentralWidget(self.imageArea)
 
         self.UISetup()
 
@@ -48,14 +54,21 @@ class MainWindow(QMainWindow):
         # self.showMaximized()
 
     def _createToolBar(self):
+
+        toolBar = QToolBar()
+        toolBar.setMovable(False)
+        # scan button
         scanbutton = QAction("Scan", self)
         scanbutton.setStatusTip("Request a scan from the server")
         scanbutton.triggered.connect(self.perform_scan)
 
-        toolBar = QToolBar()
-        toolBar.setMovable(False)
-
         toolBar.addAction(scanbutton)
+        # save button
+        savebutton = QAction("Save", self)
+        savebutton.setStatusTip("Save the image")
+        savebutton.triggered.connect(self.save_images)
+
+        toolBar.addAction(savebutton)
 
         resolutionLabel = QLabel(f"Resolution: {self.settings.get('resolution')} ")
         toolBar.addWidget(resolutionLabel)
@@ -78,7 +91,9 @@ class MainWindow(QMainWindow):
         scanner = Scanner(userhost)
 
         self._continue_scanning = True
-        images = []
+        self.images = []
+
+        imageStack = QVBoxLayout()
         while self._continue_scanning:
             
             skip_path = False
@@ -87,12 +102,14 @@ class MainWindow(QMainWindow):
 
             image = scanner.scan_image(resolution=resolution, debug=skip_path)
 
-            # imageLabel = QLabel()
-            # imageLabel.setPixmap(QPixmap().fromImage(ImageQt(image)))
+            imageLabel = QLabel()
+            imageLabel.setPixmap(QPixmap().fromImage(ImageQt(image)))
 
-            # self._maingrid.addItem(imageLabel, 0, 0)
+            imageStack.addWidget(imageLabel)
 
-            images.append(image)
+            self.imageArea.setLayout(imageStack)
+
+            self.images.append(image)
 
             ask_continue_window = QDialog(self)
             self._current_popup = ask_continue_window
@@ -113,6 +130,8 @@ class MainWindow(QMainWindow):
 
             ask_continue_window.setLayout(container)
             ask_continue_window.exec()
+
+    def save_images(self):
 
         ask_filename = QDialog(self)
         self._current_popup = ask_filename
@@ -137,7 +156,7 @@ class MainWindow(QMainWindow):
         filename = f"{os.path.splitext(filename)[0]}.pdf"  # force pdf
 
         print(f"Saving image out to {filename}")
-        images[0].save(fp=filename, format="PDF", save_all=True, append_images=images[1:])
+        self.images[0].save(fp=filename, format="PDF", save_all=True, append_images=images[1:])
 
     def set_continue_true(self):
         self._continue_scanning = True

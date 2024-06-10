@@ -2,10 +2,9 @@
 UI module
 """
 
-import sys
 
 from PyQt6.QtGui import QAction
-from PyQt6.QtWidgets import QApplication, QLabel, QWidget, QMainWindow, QGridLayout, QHBoxLayout, QMenu, QToolBar, QPushButton, \
+from PyQt6.QtWidgets import QLabel, QWidget, QMainWindow, QGridLayout, QHBoxLayout, QMenu, QToolBar, QPushButton, \
     QLineEdit, QDialog
 
 from bridge.gui.settings import Settings
@@ -135,11 +134,3 @@ class MainWindow(QMainWindow):
     def set_continue_false(self):
         self._continue_scanning = False
         self.close_current_popup()
-
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-
-    window = MainWindow()
-
-    sys.exit(app.exec())

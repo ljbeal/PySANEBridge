@@ -1,8 +1,9 @@
 """
 Main module houses the CLI
 """
+from typing import Tuple
 import click
-from PIL import Image
+from PIL.Image import Image
 
 from bridge.scan.scan import Scanner
 
@@ -32,7 +33,7 @@ def scan(filename: str = "scan.pdf", resolution: int = 300):
     images[0].save(fp=filename, format="PDF", save_all=True, append_images=images[1:])
 
 
-def ask_continue(scanner, **scan_args) -> (bool, Image):
+def ask_continue(scanner, **scan_args) -> Tuple[bool, Image]:
     """Ask if the user wants to continue scanning"""
 
     image = scanner.scan_image(**scan_args)

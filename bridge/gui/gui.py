@@ -80,7 +80,17 @@ class MainWindow(QMainWindow):
         self._continue_scanning = True
         images = []
         while self._continue_scanning:
-            image = scanner.scan_image(resolution=resolution)
+            
+            skip_path = False
+            if self.settings.get("skip_scan"):
+                skip_path = "load.png"
+
+            image = scanner.scan_image(resolution=resolution, debug=skip_path)
+
+            # imageLabel = QLabel()
+            # imageLabel.setPixmap(QPixmap().fromImage(ImageQt(image)))
+
+            # self._maingrid.addItem(imageLabel, 0, 0)
 
             images.append(image)
 

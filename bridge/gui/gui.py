@@ -156,7 +156,7 @@ class MainWindow(QMainWindow):
         filename = f"{os.path.splitext(filename)[0]}.pdf"  # force pdf
 
         print(f"Saving image out to {filename}")
-        self.images[0].save(fp=filename, format="PDF", save_all=True, append_images=images[1:])
+        self.images[0].save(fp=filename, format="PDF", save_all=True, append_images=self.images[1:])
 
     def set_continue_true(self):
         self._continue_scanning = True

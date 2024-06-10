@@ -1,4 +1,4 @@
-from src.connection.connection import Connection
+from bridge.connection.connection import Connection
 
 
 def test_userhost():

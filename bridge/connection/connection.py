@@ -2,7 +2,7 @@
 The Connection class handles ssh calls to the remote host
 """
 
-from src.connection.cmd import CMD
+from bridge.connection.cmd import CMD
 
 
 class Connection:

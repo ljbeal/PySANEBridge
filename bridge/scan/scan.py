@@ -5,7 +5,7 @@ import os
 import random
 from PIL import Image
 
-from src.connection.connection import Connection
+from bridge.connection.connection import Connection
 
 
 class Scanner:
@@ -34,6 +34,10 @@ class Scanner:
         """Request a scan and return it as a PIL Image"""
         filename = "".join([str(random.randint(0, 9)) for i in range(16)]) + ".png"
         print("Requesting a scan...")
+        self.conn.cmd("pwd")
+
+        print("\tCan connect to host, issuing scan command")
+
         self.conn.cmd(
             f"scanimage "
             f"--format png "
@@ -42,11 +46,11 @@ class Scanner:
             f"--progress",
             stream=True
         )
-
+        print("\tDone, copying file")
         self.conn.cmd(f"scp {self.conn.userhost}:{filename} .", local=True)
-
+        print("\tRemoving remote output")
         self.conn.cmd(f"rm {filename}")
-
+        print("\tReading in image")
         img = Image.open(filename)
 
         try:

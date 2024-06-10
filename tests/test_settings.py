@@ -5,7 +5,7 @@ Test the settings module
 import os.path
 import unittest
 
-from src.gui.settings import Settings
+from bridge.gui.settings import Settings
 
 
 class TestSettings(unittest.TestCase):

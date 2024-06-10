@@ -4,7 +4,7 @@ Main module houses the CLI
 import click
 from PIL import Image
 
-from src.scan.scan import Scanner
+from bridge.scan.scan import Scanner
 
 
 @click.command()

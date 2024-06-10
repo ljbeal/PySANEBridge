@@ -1,6 +1,7 @@
 """
 The scan class holds the actual scanner instance
 """
+import copy
 import os
 import random
 from PIL import Image
@@ -44,7 +45,6 @@ class Scanner:
 
         self.conn.cmd(
             f"scanimage "
-            f"--format png "
             f"--resolution {resolution} "
             f"--output-file {filename} "
             f"--progress",
@@ -55,7 +55,9 @@ class Scanner:
         print("\tRemoving remote output")
         self.conn.cmd(f"rm {filename}")
         print("\tReading in image")
-        img = Image.open(filename)
+        with Image.open(filename) as imgfile:
+            img = imgfile.copy()
+            
         print("\tDeleting temporary file...", end = " ")
         try:
             os.remove(filename)
@@ -79,4 +81,4 @@ class Scanner:
 if __name__ == "__main__":
     machine = Scanner("pi@192.168.0.8")
 
-    machine.scan_and_save(resolution=100)
+    machine.scan_and_save(resolution=75)

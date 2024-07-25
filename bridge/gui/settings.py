@@ -106,4 +106,4 @@ class Settings:
         Arg:
             item: item to fetch
         """
-        return self.file_data[item]
+        return self.file_data.get(item, None)

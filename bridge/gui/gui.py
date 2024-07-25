@@ -5,6 +5,7 @@ UI module
 
 import os
 
+from PIL import Image
 from PIL.ImageQt import ImageQt
 from PyQt6.QtGui import QAction, QPixmap
 from PyQt6.QtWidgets import (
@@ -18,10 +19,30 @@ from PyQt6.QtWidgets import (
     QDialog,
     QScrollArea
 )
+from PyQt6.QtCore import QThread, pyqtSignal, pyqtSlot
 
 from bridge.gui.settings import Settings
 from bridge.gui.pageviewer import PageViewerWidget
 from bridge.scan.scan import Scanner
+
+
+class ScanWorker(QThread):
+    finished = pyqtSignal()
+
+    def __init__(self, scanner, resolution):
+        super().__init__()
+        print(f"scanner created with resolution {resolution}")
+        self.scanner = scanner
+        self.resolution = resolution
+
+        self.image = None
+
+    @pyqtSlot()
+    def run(self):
+        """request a scan"""
+        print("scanning...")
+        self.image = self.scanner.scan_image(self.resolution)
+        self.finished.emit()
 
 
 class MainWindow(QMainWindow):
@@ -42,6 +63,8 @@ class MainWindow(QMainWindow):
 
         self.image_widget = PageViewerWidget()
         self.setCentralWidget(self.image_widget)
+
+        self._waiting_for_scan = False
 
         self.UISetup()
 
@@ -68,30 +91,34 @@ class MainWindow(QMainWindow):
         toolBar = QToolBar()
         toolBar.setMovable(False)
         # scan button
-        scanbutton = QAction("Scan", self)
-        scanbutton.setStatusTip("Request a scan from the server")
-        scanbutton.triggered.connect(self.perform_scan)
+        self.scanbutton = QAction("Scan", self)
+        self.scanbutton.setStatusTip("Request a scan from the server")
+        self.scanbutton.triggered.connect(self.perform_scan)
 
-        toolBar.addAction(scanbutton)
+        toolBar.addAction(self.scanbutton)
+
         # save button
-        savebutton = QAction("Save", self)
-        savebutton.setStatusTip("Save the image")
-        savebutton.triggered.connect(self.save_images)
+        self.savebutton = QAction("Save", self)
+        self.savebutton.setStatusTip("Save the image")
+        self.savebutton.triggered.connect(self.save_images)
 
-        toolBar.addAction(savebutton)
+        toolBar.addAction(self.savebutton)
 
         # clear button
-        clearbutton = QAction("Clear", self)
-        clearbutton.setStatusTip("Clears all pages from storage")
-        clearbutton.triggered.connect(self.image_widget.remove_all_images)
+        self.clearbutton = QAction("Clear", self)
+        self.clearbutton.setStatusTip("Clears all pages from storage")
+        self.clearbutton.triggered.connect(self.image_widget.remove_all_images)
 
-        toolBar.addAction(clearbutton)
+        toolBar.addAction(self.clearbutton)
 
         resolutionLabel = QLabel(f"Resolution: {self.settings.get('resolution')} ")
         toolBar.addWidget(resolutionLabel)
 
         connectionLabel = QLabel(f"Connected: {self.settings.get('userhost')} ")
         toolBar.addWidget(connectionLabel)
+
+        self.statuslabel = QLabel(f"Ready")
+        toolBar.addWidget(self.statuslabel)
 
         self.addToolBar(toolBar)
 
@@ -110,38 +137,68 @@ class MainWindow(QMainWindow):
         self._continue_scanning = True
 
         imageStack = QVBoxLayout()
-        while self._continue_scanning:
-            
-            skip_path = None
-            skip = self.settings.get("skip_scan")
-            if skip is not None and skip:
-                import bridge
 
-                skip_path = os.path.join(os.path.split(bridge.__file__)[0], "..", "tests", "load.png")
+        skip_path = None
+        skip = self.settings.get("skip_scan")
+        if skip is not None and skip:
+            import bridge
+            skip_path = os.path.join(os.path.split(bridge.__file__)[0], "..", "tests", "load.png")
 
-            image = scanner.scan_image(resolution=resolution, debug=skip_path)
+            print(f"skipping scan, loading {skip_path}")
+            with Image.open(skip_path) as imgfile:
+                image = imgfile.copy()
+            self.scan_complete(image=image)
 
-            self.image_widget.add_image(image)
+        else:
+            print("creating connection to scanner")
+            self.scanworker = ScanWorker(scanner, resolution)
 
-            ask_continue_window = QDialog(self)
-            self._current_popup = ask_continue_window
-            ask_continue_window.setWindowTitle("Continue Scanning?")
+            self.scanworker.finished.connect(self.scan_complete)
+            self.scanworker.start()
+            self.waiting_for_scan = True
 
-            container = QGridLayout()
+    @property
+    def waiting_for_scan(self):
+        return self._waiting_for_scan
 
-            continue_y = QPushButton("Yes")
-            continue_n = QPushButton("No")
-            contmessag = QLabel("Scan Additional Pages?:")
+    @waiting_for_scan.setter
+    def waiting_for_scan(self, wait: bool):
+        self.scanbutton.setEnabled(not wait)
+        self.clearbutton.setEnabled(not wait)
+        self.savebutton.setEnabled(not wait)
 
-            container.addWidget(contmessag, 0, 0, 1, 2)
-            container.addWidget(continue_n, 1, 0)
-            container.addWidget(continue_y, 1, 1)
+        if wait:
+            self.statuslabel.setText("Scanning...")
+        else:
+            self.statuslabel.setText("Ready")
 
-            continue_n.clicked.connect(self.set_continue_false)
-            continue_y.clicked.connect(self.set_continue_true)
+    def scan_complete(self, image=None):
+        self.waiting_for_scan = False
 
-            ask_continue_window.setLayout(container)
-            ask_continue_window.exec()
+        if image is None:
+            image = self.scanworker.image
+
+        self.image_widget.add_image(image)
+
+        ask_continue_window = QDialog(self)
+        self._current_popup = ask_continue_window
+        ask_continue_window.setWindowTitle("Continue Scanning?")
+
+        container = QGridLayout()
+
+        continue_y = QPushButton("Yes")
+        continue_n = QPushButton("No")
+        contmessag = QLabel("Scan Additional Pages?:")
+
+        container.addWidget(contmessag, 0, 0, 1, 2)
+        container.addWidget(continue_n, 1, 0)
+        container.addWidget(continue_y, 1, 1)
+
+        continue_n.clicked.connect(self.set_continue_false)
+        continue_y.clicked.connect(self.set_continue_true)
+
+        ask_continue_window.setLayout(container)
+        ask_continue_window.exec()
 
     def save_images(self):
 
@@ -182,6 +239,8 @@ class MainWindow(QMainWindow):
     def set_continue_true(self):
         self._continue_scanning = True
         self.close_current_popup()
+
+        self.perform_scan()
 
     def set_continue_false(self):
         self._continue_scanning = False

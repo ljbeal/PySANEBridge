@@ -35,6 +35,8 @@ class Scanner:
         """Request a scan and return it as a PIL Image"""
 
         if debug is not None:
+            debug = os.path.abspath(debug)
+            print(f"skipping scan, loading {debug}")
             with Image.open(debug) as imgfile:
                 img = imgfile.copy()
             return img

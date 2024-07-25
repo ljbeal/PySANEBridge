@@ -1,9 +1,9 @@
 """
 The scan class holds the actual scanner instance
 """
-import copy
 import os
 import random
+
 from PIL import Image
 
 from bridge.connection.connection import Connection
@@ -34,7 +34,7 @@ class Scanner:
     def scan_image(self, resolution: int = 300, debug: None | str = None) -> Image:
         """Request a scan and return it as a PIL Image"""
 
-        if debug is not None:            
+        if debug is not None:
             with Image.open(debug) as imgfile:
                 img = imgfile.copy()
             return img

@@ -4,10 +4,20 @@ UI module
 
 
 import os
-from PyQt6.QtGui import QAction, QPixmap
-from PyQt6.QtWidgets import QLabel, QWidget, QMainWindow, QGridLayout, QVBoxLayout, QHBoxLayout, QMenu, QToolBar, QPushButton, \
-    QLineEdit, QDialog, QScrollArea
+
 from PIL.ImageQt import ImageQt
+from PyQt6.QtGui import QAction, QPixmap
+from PyQt6.QtWidgets import (
+    QLabel,
+    QMainWindow,
+    QGridLayout,
+    QVBoxLayout,
+    QToolBar,
+    QPushButton,
+    QLineEdit,
+    QDialog,
+    QScrollArea
+)
 
 from bridge.gui.settings import Settings
 from bridge.scan.scan import Scanner

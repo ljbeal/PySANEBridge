@@ -46,11 +46,11 @@ class Connection:
         return f"{self.user}@{self.host}"
 
     def cmd(
-            self,
-            cmd: str,
-            local: bool = False,
-            verbose: bool = False,
-            stream: bool = False,
+        self,
+        cmd: str,
+        local: bool = False,
+        verbose: bool = False,
+        stream: bool = False,
     ) -> CMD:
         """
         Execute a command on the remote machine

@@ -1,6 +1,7 @@
 """
 Small module to handle an instance of a command execution
 """
+
 import subprocess
 import threading
 
@@ -35,13 +36,11 @@ class CMD:
         ) as proc:
             stdout_cache = []
             stdout_thread = threading.Thread(
-                target=stream_capture,
-                args=[proc.stdout, stdout_cache, stream]
+                target=stream_capture, args=[proc.stdout, stdout_cache, stream]
             )
             stderr_cache = []
             stderr_thread = threading.Thread(
-                target=stream_capture,
-                args=[proc.stderr, stderr_cache, stream]
+                target=stream_capture, args=[proc.stderr, stderr_cache, stream]
             )
 
             stdout_thread.start()

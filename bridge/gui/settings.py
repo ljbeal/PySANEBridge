@@ -1,6 +1,7 @@
 """
 Module for a self healing settings file
 """
+
 import os
 from typing import Any
 
@@ -22,10 +23,7 @@ class Settings:
 
         self._path = os.path.abspath(path)
 
-        self._defaults = {
-            "userhost": "localhost",
-            "resolution": 300
-        }
+        self._defaults = {"userhost": "localhost", "resolution": 300}
 
         print(f"using settings file at {self.file}")
         current_data = self.file_data

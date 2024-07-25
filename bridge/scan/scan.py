@@ -41,15 +41,10 @@ class Scanner:
         print("Requesting a scan...")
         self.conn.cmd("pwd")
 
-        print("\tCan connect to host, issuing scan command")
+        cmd = f"scanimage --resolution {resolution} --output-file {filename}"
+        print(f"\tCan connect to host, issuing scan command {cmd}")
 
-        self.conn.cmd(
-            f"scanimage "
-            f"--resolution {resolution} "
-            f"--output-file {filename} "
-            f"--progress",
-            stream=True
-        )
+        self.conn.cmd(cmd)
         print("\tDone, copying file")
         self.conn.cmd(f"scp {self.conn.userhost}:{filename} .", local=True)
         print("\tRemoving remote output")

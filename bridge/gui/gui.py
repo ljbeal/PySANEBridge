@@ -20,6 +20,7 @@ from PyQt6.QtWidgets import (
 )
 
 from bridge.gui.settings import Settings
+from bridge.gui.pageviewer import PageViewerWidget
 from bridge.scan.scan import Scanner
 
 
@@ -39,9 +40,8 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Scanner SANE Bridge")
         self.setGeometry(100, 100, 600, 400)
 
-        self.images = []
-        self.imageArea = QScrollArea(self)
-        self.setCentralWidget(self.imageArea)
+        self.image_widget = PageViewerWidget()
+        self.setCentralWidget(self.image_widget)
 
         self.UISetup()
 
@@ -101,7 +101,6 @@ class MainWindow(QMainWindow):
         scanner = Scanner(userhost)
 
         self._continue_scanning = True
-        self.images = []
 
         imageStack = QVBoxLayout()
         while self._continue_scanning:
@@ -115,14 +114,7 @@ class MainWindow(QMainWindow):
 
             image = scanner.scan_image(resolution=resolution, debug=skip_path)
 
-            imageLabel = QLabel()
-            imageLabel.setPixmap(QPixmap().fromImage(ImageQt(image)))
-
-            imageStack.addWidget(imageLabel)
-
-            self.imageArea.setLayout(imageStack)
-
-            self.images.append(image)
+            self.image_widget.add_image(image)
 
             ask_continue_window = QDialog(self)
             self._current_popup = ask_continue_window
@@ -170,11 +162,14 @@ class MainWindow(QMainWindow):
 
         print(f"Saving image out to {filename}...", end = " ")
         try:
-            self.images[0].save(fp=filename, format="PDF", save_all=True, append_images=self.images[1:])
+            self.image_widget.images[0].save(fp=filename, format="PDF", save_all=True,
+                                             append_images=self.image_widget.images[1:])
             print("Done.")
         except Exception as ex:
             print(f"Unhandled exception: {ex}")
             raise
+
+        self.image_widget.remove_all_images()
 
 
     def set_continue_true(self):

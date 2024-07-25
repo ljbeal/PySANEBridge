@@ -51,9 +51,9 @@ class PageViewerWidget(QWidget):
 
             image_layout.addWidget(label)
 
-            # remove_button = QPushButton("Remove")
-            # remove_button.clicked.connect(lambda _, i=idx: self.remove_image(i))
-            # image_layout.addWidget(remove_button)
+            remove_button = QPushButton("Remove")
+            remove_button.clicked.connect(lambda _, i=idx: self.remove_image(i))
+            image_layout.addWidget(remove_button)
 
             image_widget.setLayout(image_layout)
             self.scroll_layout.addWidget(image_widget)

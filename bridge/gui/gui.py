@@ -109,7 +109,9 @@ class MainWindow(QMainWindow):
             skip_path = None
             skip = self.settings.get("skip_scan")
             if skip is not None and skip:
-                skip_path = "load.png"
+                import bridge
+
+                skip_path = os.path.join(os.path.split(bridge.__file__)[0], "..", "tests", "load.png")
 
             image = scanner.scan_image(resolution=resolution, debug=skip_path)
 

@@ -96,7 +96,7 @@ class MainWindow(QMainWindow):
         imageStack = QVBoxLayout()
         while self._continue_scanning:
             
-            skip_path = False
+            skip_path = None
             skip = self.settings.get("skip_scan")
             if skip is not None and skip:
                 skip_path = "load.png"

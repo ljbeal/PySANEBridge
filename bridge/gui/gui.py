@@ -80,6 +80,13 @@ class MainWindow(QMainWindow):
 
         toolBar.addAction(savebutton)
 
+        # clear button
+        clearbutton = QAction("Clear", self)
+        clearbutton.setStatusTip("Clears all pages from storage")
+        clearbutton.triggered.connect(self.image_widget.remove_all_images)
+
+        toolBar.addAction(clearbutton)
+
         resolutionLabel = QLabel(f"Resolution: {self.settings.get('resolution')} ")
         toolBar.addWidget(resolutionLabel)
 

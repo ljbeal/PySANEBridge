@@ -97,7 +97,8 @@ class MainWindow(QMainWindow):
         while self._continue_scanning:
             
             skip_path = False
-            if self.settings.get("skip_scan"):
+            skip = self.settings.get("skip_scan")
+            if skip is not None and skip:
                 skip_path = "load.png"
 
             image = scanner.scan_image(resolution=resolution, debug=skip_path)

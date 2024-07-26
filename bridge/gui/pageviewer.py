@@ -37,29 +37,37 @@ class PageViewerWidget(QWidget):
         self.update_display()
 
     def update_display(self):
-        for i in reversed(range(self.scroll_layout.count())):
-            self.scroll_layout.itemAt(i).widget().setParent(None)
+        print("updating display", end="... ")
+        try:
+            for i in reversed(range(self.scroll_layout.count())):
+                self.scroll_layout.itemAt(i).widget().setParent(None)
 
-        for idx, image in enumerate(self.images):
-            image_widget = QWidget()
-            image_layout = QHBoxLayout()
+            for idx, image in enumerate(self.images):
+                image_widget = QWidget()
+                image_layout = QHBoxLayout()
 
-            label = QLabel()
-            pixmap = QPixmap().fromImage(ImageQt(image))
-            label.setPixmap(pixmap)
-            label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+                label = QLabel()
+                pixmap = QPixmap().fromImage(ImageQt(image))
+                label.setPixmap(pixmap)
+                label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-            image_layout.addWidget(label)
+                image_layout.addWidget(label)
 
-            remove_button = QPushButton("Remove")
-            remove_button.clicked.connect(lambda _, i=idx: self.remove_image(i))
-            image_layout.addWidget(remove_button)
+                remove_button = QPushButton("Remove")
+                remove_button.clicked.connect(lambda _, i=idx: self.remove_image(i))
+                image_layout.addWidget(remove_button)
 
-            image_widget.setLayout(image_layout)
-            self.scroll_layout.addWidget(image_widget)
+                image_widget.setLayout(image_layout)
+                self.scroll_layout.addWidget(image_widget)
 
-    def add_image(self, image_path):
-        self.images.append(image_path)
+            print("done")
+        except Exception as ex:
+            print(f"unhandled exception:\n{ex}")
+            raise ex
+
+    def add_image(self, image):
+        print(f"adding image {image}")
+        self.images.append(image.convert("P"))
         self.update_display()
 
     def remove_image(self, index):

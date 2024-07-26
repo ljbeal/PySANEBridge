@@ -55,7 +55,6 @@ class MainWindow(QMainWindow):
 
         self._settings = Settings("settings.ini")
 
-        self._continue_scanning = True
         self._current_popup = None
 
         self.setWindowTitle("Scanner SANE Bridge")
@@ -134,10 +133,6 @@ class MainWindow(QMainWindow):
 
         scanner = Scanner(userhost)
 
-        self._continue_scanning = True
-
-        imageStack = QVBoxLayout()
-
         skip_path = None
         skip = self.settings.get("skip_scan")
         if skip is not None and skip:
@@ -146,7 +141,7 @@ class MainWindow(QMainWindow):
 
             print(f"skipping scan, loading {skip_path}")
             with Image.open(skip_path) as imgfile:
-                image = imgfile.copy()
+                image = imgfile.copy().convert("RGB")
             self.scan_complete(image=image)
 
         else:
@@ -173,11 +168,14 @@ class MainWindow(QMainWindow):
             self.statuslabel.setText("Ready")
 
     def scan_complete(self, image=None):
+        print("scan complete")
         self.waiting_for_scan = False
 
         if image is None:
+            print("retrieving image")
             image = self.scanworker.image
 
+        print("adding image to canvas")
         self.image_widget.add_image(image)
 
         ask_continue_window = QDialog(self)
@@ -234,14 +232,3 @@ class MainWindow(QMainWindow):
             raise
 
         self.image_widget.remove_all_images()
-
-
-    def set_continue_true(self):
-        self._continue_scanning = True
-        self.close_current_popup()
-
-        self.perform_scan()
-
-    def set_continue_false(self):
-        self._continue_scanning = False
-        self.close_current_popup()

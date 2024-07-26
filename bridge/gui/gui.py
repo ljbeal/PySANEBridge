@@ -178,26 +178,6 @@ class MainWindow(QMainWindow):
         print("adding image to canvas")
         self.image_widget.add_image(image)
 
-        ask_continue_window = QDialog(self)
-        self._current_popup = ask_continue_window
-        ask_continue_window.setWindowTitle("Continue Scanning?")
-
-        container = QGridLayout()
-
-        continue_y = QPushButton("Yes")
-        continue_n = QPushButton("No")
-        contmessag = QLabel("Scan Additional Pages?:")
-
-        container.addWidget(contmessag, 0, 0, 1, 2)
-        container.addWidget(continue_n, 1, 0)
-        container.addWidget(continue_y, 1, 1)
-
-        continue_n.clicked.connect(self.set_continue_false)
-        continue_y.clicked.connect(self.set_continue_true)
-
-        ask_continue_window.setLayout(container)
-        ask_continue_window.exec()
-
     def save_images(self):
 
         ask_filename = QDialog(self)

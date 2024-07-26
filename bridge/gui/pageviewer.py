@@ -47,7 +47,7 @@ class PageViewerWidget(QWidget):
                 image_layout = QHBoxLayout()
 
                 label = QLabel()
-                pixmap = QPixmap().fromImage(ImageQt(image))
+                pixmap = QPixmap().fromImage(ImageQt(image.convert("P")))
                 label.setPixmap(pixmap)
                 label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
@@ -67,7 +67,7 @@ class PageViewerWidget(QWidget):
 
     def add_image(self, image):
         print(f"adding image {image}")
-        self.images.append(image.convert("P"))
+        self.images.append(image)
         self.update_display()
 
     def remove_image(self, index):

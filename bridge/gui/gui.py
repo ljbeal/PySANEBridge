@@ -185,29 +185,55 @@ class MainWindow(QMainWindow):
         ask_filename.setWindowTitle("Choose where to save the file")
 
         # just a filename for now
+        name_label = QLabel("Filename")
         name_entry = QLineEdit()
+
+        dpi_label = QLabel("Output DPI")
+        dpi_entry = QLineEdit()
+        dpi_entry.setPlaceholderText("100")
+
         ok_button = QPushButton("Save")
         ok_button.clicked.connect(self.close_current_popup)
 
         container = QGridLayout()
-        container.addWidget(name_entry, 0, 0)
-        container.addWidget(ok_button, 0, 1)
+        container.addWidget(name_label, 0, 0)
+        container.addWidget(dpi_label, 0, 1)
+        container.addWidget(name_entry, 1, 0)
+        container.addWidget(dpi_entry, 1, 1)
+        container.addWidget(ok_button, 1, 2)
 
         ask_filename.setLayout(container)
         ask_filename.exec()
 
         filename = name_entry.text()
-        if filename == "": 
+        if filename == "":
             return
+
+        dpi_target = dpi_entry.text()
+        if dpi_target == "":
+            dpi_target = 100
+
+        dpi_target = int(dpi_target)
+        print(f"saving to file {filename}, with dpi {dpi_target}")
 
         filename = f"{os.path.splitext(filename)[0]}.pdf"  # force pdf
 
-        self.save_to_file(filename)
+        self.save_to_file(filename, dpi_target)
 
-    def save_to_file(self, filename):
+    def save_to_file(self, filename, dpi_target: int = 100):
+        """
+        Save the images out to filename
+
+        Args:
+            filename: target file, forced .pdf format
+            dpi_target: target dpi to aim for
+                100 dpi ~140KB per page
+                200 dpi ~540KB per page
+                300 dpi ~1.3MB per page
+                400 dpi ~2.0MB per page
+        """
         print(f"Saving image out to {filename}...", end = " ")
 
-        dpi_target = 100  # ~140 KB per page
         scale = dpi_target / self.settings.get("resolution")
         print(f"Scaling image by {scale}")
 

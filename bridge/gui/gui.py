@@ -214,5 +214,3 @@ class MainWindow(QMainWindow):
         except Exception as ex:
             print(f"Unhandled exception:\n{ex}")
             raise
-
-        self.image_widget.remove_all_images()

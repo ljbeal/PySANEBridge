@@ -204,8 +204,12 @@ class MainWindow(QMainWindow):
 
         print(f"Saving image out to {filename}...", end = " ")
         try:
-            self.image_widget.images[0].save(fp=filename, format="PDF", save_all=True,
-                                             append_images=self.image_widget.images[1:])
+            cache = []
+            for image in self.image_widget.images:
+                cache.append(image)
+
+            cache[0].save(fp=filename, format="PDF", save_all=True,
+                          append_images=cache[1:])
             print("Done.")
         except Exception as ex:
             print(f"Unhandled exception:\n{ex}")

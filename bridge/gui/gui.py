@@ -208,7 +208,7 @@ class MainWindow(QMainWindow):
                                              append_images=self.image_widget.images[1:])
             print("Done.")
         except Exception as ex:
-            print(f"Unhandled exception: {ex}")
+            print(f"Unhandled exception:\n{ex}")
             raise
 
         self.image_widget.remove_all_images()

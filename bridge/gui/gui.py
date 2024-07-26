@@ -206,10 +206,18 @@ class MainWindow(QMainWindow):
 
     def save_to_file(self, filename):
         print(f"Saving image out to {filename}...", end = " ")
+
+        dpi_target = 100  # ~140 KB per page
+        scale = dpi_target / self.settings.get("resolution")
+        print(f"Scaling image by {scale}")
+
         try:
             cache = []
             for image in self.image_widget.images:
-                cache.append(image)
+                width = int(image.size[0] * scale)
+                height = int(image.size[1] * scale)
+
+                cache.append(image.resize((width, height)))
 
             cache[0].save(fp=filename, format="PDF", save_all=True,
                           append_images=cache[1:])

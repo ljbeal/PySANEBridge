@@ -46,8 +46,11 @@ class PageViewerWidget(QWidget):
                 image_widget = QWidget()
                 image_layout = QHBoxLayout()
 
+                width = 800
+                height = int(image.size[1] * (width / image.size[0]))
+
                 label = QLabel()
-                pixmap = QPixmap().fromImage(ImageQt(image.convert("P")))
+                pixmap = QPixmap().fromImage(ImageQt(image.resize((width, height)).convert("P")))
                 label.setPixmap(pixmap)
                 label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 

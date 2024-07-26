@@ -202,6 +202,9 @@ class MainWindow(QMainWindow):
 
         filename = f"{os.path.splitext(filename)[0]}.pdf"  # force pdf
 
+        self.save_to_file(filename)
+
+    def save_to_file(self, filename):
         print(f"Saving image out to {filename}...", end = " ")
         try:
             cache = []

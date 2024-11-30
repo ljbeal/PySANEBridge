@@ -46,7 +46,7 @@ class PageViewerWidget(QWidget):
                 image_widget = QWidget()
                 image_layout = QHBoxLayout()
 
-                width = 800
+                width = 400
                 height = int(image.size[1] * (width / image.size[0]))
 
                 label = QLabel()

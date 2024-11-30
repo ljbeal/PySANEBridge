@@ -71,9 +71,3 @@ class Scanner:
         """Scan an image, saving it locally to output_name"""
         img = self.scan_image(resolution)
         img.save(fp=output_name, format="PDF")
-
-
-if __name__ == "__main__":
-    machine = Scanner("pi@192.168.0.8")
-
-    machine.scan_and_save(resolution=75)

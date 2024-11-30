@@ -71,9 +71,3 @@ class Connection:
         self._cmd_obj.exec(stream=stream)
 
         return self._cmd_obj
-
-
-if __name__ == "__main__":
-    test = Connection("pi@192.168.0.8")
-
-    print(test.cmd("pwd").stdout)

@@ -22,6 +22,7 @@ from bridge.gui.settings import Settings
 from bridge.gui.subcontainers.pageviewer import PageViewerWidget
 from bridge.scan.scan import Scanner
 from gui.subcontainers.confirmation_popup import ConfirmationWindow
+from gui.subcontainers.question_window import QuestionWindow
 
 
 class ScanWorker(QThread):
@@ -127,9 +128,20 @@ class MainWindow(QMainWindow):
         userhost = self.settings.get("userhost")
         resolution = self.settings.get("resolution")
 
-        print(f"Scanning at {userhost}")
-
         scanner = Scanner(userhost)
+        questionwindow = QuestionWindow(self, "Choose DPI", default="300")
+
+        if not questionwindow.state:
+            return
+        else:
+            dpi = questionwindow.value
+
+            if dpi != "":
+                dpi = int(dpi)
+            else:
+                dpi = 300
+
+        print(f"Scanning at {userhost} with dpi {dpi}")
 
         skip_path = None
         skip = self.settings.get("skip_scan")

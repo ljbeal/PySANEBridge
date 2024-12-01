@@ -91,6 +91,14 @@ You can scan as many times as you want, and the result will be loaded into the t
 
 Images will be previewed within the main window at a reduced size (400px width).
 
+### Load
+
+This button allows you to choose files from the filesystem instead of scanning remotely.
+
+Note that this makes no distinction between scanned and loaded files, so you are able to mix the two.
+
+This allows you to merge scanned documents with files already saved.
+
 ### Save
 
 This saves all scanned images as a single pdf.

@@ -111,11 +111,6 @@ e.g.
 
 The clear button will remove all stored images.
 
-```
-Warning!
-This does not ask for confirmation
-```
-
 #### Remove
 
 Short of clearing the whole scan storage, you can remove individual pages using the Remove button

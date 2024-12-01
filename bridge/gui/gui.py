@@ -197,12 +197,20 @@ class MainWindow(QMainWindow):
 
     def save_images(self):
 
-        ask_filename = Popup(self, title="Choose save location")
-        self._current_popup = ask_filename
+        save = QFileDialog()
+        save.DialogLabel("Choose Save Location")
+        save.setDefaultSuffix("pdf")
 
-        # just a filename for now
-        name_label = QLabel("Filename")
-        name_entry = QLineEdit()
+        filename = save.getSaveFileName()[0]
+
+        print("file output")
+        print(filename)
+
+        if filename == "" or filename is None:
+            return
+
+        ask_filename = Popup(self, title="Choose save dpi")
+        self._current_popup = ask_filename
 
         dpi_label = QLabel("Output DPI")
         dpi_entry = QLineEdit()
@@ -212,24 +220,20 @@ class MainWindow(QMainWindow):
         ok_button.clicked.connect(self.close_current_popup)
 
         container = QGridLayout()
-        container.addWidget(name_label, 0, 0)
         container.addWidget(dpi_label, 0, 1)
-        container.addWidget(name_entry, 1, 0)
         container.addWidget(dpi_entry, 1, 1)
         container.addWidget(ok_button, 1, 2)
 
         ask_filename.setLayout(container)
         ask_filename.exec()
 
-        filename = name_entry.text()
-        if filename == "":
-            return
-
         dpi_target = dpi_entry.text()
         if dpi_target == "":
             dpi_target = 100
 
         dpi_target = int(dpi_target)
+        if "." not in filename:
+            filename += ".pdf"
         print(f"saving to file {filename}, with dpi {dpi_target}")
 
         filename = f"{os.path.splitext(filename)[0]}.pdf"  # force pdf

@@ -21,6 +21,7 @@ from bridge.gui.subcontainers.popup import Popup
 from bridge.gui.settings import Settings
 from bridge.gui.subcontainers.pageviewer import PageViewerWidget
 from bridge.scan.scan import Scanner
+from gui.subcontainers.confirmation_popup import ConfirmationWindow
 
 
 class ScanWorker(QThread):
@@ -217,7 +218,11 @@ class MainWindow(QMainWindow):
         self.save_to_file(filename, dpi_target)
 
     def clear_images(self):
-        self.image_widget.remove_all_images()
+        self._current_popup = ConfirmationWindow(self, "Clear Images")
+
+        state = self._current_popup.state
+        if state:
+            self.image_widget.remove_all_images()
 
     def save_to_file(self, filename, dpi_target: int = 100):
         """

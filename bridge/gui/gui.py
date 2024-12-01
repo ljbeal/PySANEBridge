@@ -17,9 +17,9 @@ from PyQt6.QtWidgets import (
 )
 from PyQt6.QtCore import QThread, pyqtSignal, pyqtSlot
 
-from bridge.gui.popup import Popup
+from bridge.gui.subcontainers.popup import Popup
 from bridge.gui.settings import Settings
-from bridge.gui.pageviewer import PageViewerWidget
+from bridge.gui.subcontainers.pageviewer import PageViewerWidget
 from bridge.scan.scan import Scanner
 
 

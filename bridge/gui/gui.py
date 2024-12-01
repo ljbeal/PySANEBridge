@@ -197,6 +197,10 @@ class MainWindow(QMainWindow):
 
     def save_images(self):
 
+        if len(self.image_widget.images) == 0:
+            print("no images, exiting")
+            return
+
         save = QFileDialog()
         save.DialogLabel("Choose Save Location")
         save.setDefaultSuffix("pdf")

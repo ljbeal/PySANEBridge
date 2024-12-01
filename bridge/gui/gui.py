@@ -177,9 +177,8 @@ class MainWindow(QMainWindow):
 
     def save_images(self):
 
-        ask_filename = Popup(self)
+        ask_filename = Popup(self, title="Choose save location")
         self._current_popup = ask_filename
-        ask_filename.setWindowTitle("Choose where to save the file")
 
         # just a filename for now
         name_label = QLabel("Filename")

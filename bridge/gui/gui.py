@@ -272,7 +272,7 @@ class MainWindow(QMainWindow):
                 300 dpi ~1.3MB per page
                 400 dpi ~2.0MB per page
         """
-        print(f"Saving image out to {filename}...", end = " ")
+        print(f"Saving image out to {filename}...", end=" ")
 
         scale = dpi_target / self.settings.get("resolution")
         print(f"Scaling image by {scale}")

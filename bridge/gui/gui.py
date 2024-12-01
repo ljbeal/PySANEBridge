@@ -6,21 +6,18 @@ UI module
 import os
 
 from PIL import Image
-from PIL.ImageQt import ImageQt
-from PyQt6.QtGui import QAction, QPixmap
+from PyQt6.QtGui import QAction
 from PyQt6.QtWidgets import (
     QLabel,
     QMainWindow,
     QGridLayout,
-    QVBoxLayout,
     QToolBar,
     QPushButton,
     QLineEdit,
-    QDialog,
-    QScrollArea
 )
 from PyQt6.QtCore import QThread, pyqtSignal, pyqtSlot
 
+from bridge.gui.popup import Popup
 from bridge.gui.settings import Settings
 from bridge.gui.pageviewer import PageViewerWidget
 from bridge.scan.scan import Scanner
@@ -180,7 +177,7 @@ class MainWindow(QMainWindow):
 
     def save_images(self):
 
-        ask_filename = QDialog(self)
+        ask_filename = Popup(self)
         self._current_popup = ask_filename
         ask_filename.setWindowTitle("Choose where to save the file")
 

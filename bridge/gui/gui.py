@@ -256,10 +256,7 @@ class MainWindow(QMainWindow):
         load = QFileDialog()
         load.DialogLabel("Choose File to Load")
 
-        load.show()
-
-        if load.exec():
-            filenames = load.selectedFiles()
+        filenames = load.getOpenFileNames()[0]
 
         print(f"loading files:\n{filenames}")
 

@@ -129,7 +129,7 @@ class MainWindow(QMainWindow):
         resolution = self.settings.get("resolution")
 
         scanner = Scanner(userhost)
-        questionwindow = QuestionWindow(self, "Choose DPI", default="300")
+        questionwindow = QuestionWindow(self, "Choose DPI", default=str(resolution))
 
         if not questionwindow.state:
             return
@@ -139,7 +139,7 @@ class MainWindow(QMainWindow):
             if dpi != "":
                 dpi = int(dpi)
             else:
-                dpi = 300
+                dpi = resolution
 
         print(f"Scanning at {userhost} with dpi {dpi}")
 
@@ -156,7 +156,7 @@ class MainWindow(QMainWindow):
 
         else:
             print("creating connection to scanner")
-            self.scanworker = ScanWorker(scanner, resolution)
+            self.scanworker = ScanWorker(scanner, dpi)
 
             self.scanworker.finished.connect(self.scan_complete)
             self.scanworker.start()

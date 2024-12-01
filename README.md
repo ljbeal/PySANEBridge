@@ -77,9 +77,9 @@ Defaults to `False`
 
 ## User Interface
 
-On running the `main.py` script, you will be greeted with a window which has 3 buttons: Scan, Save and Clear
+On running the `main.py` script, you will be greeted with a window which has 4 buttons: Scan, Load, Save and Clear
 
-![image](https://github.com/user-attachments/assets/3cde0336-19d7-4e3c-bc20-0245633bee2f)
+![image](https://github.com/user-attachments/assets/08da6c49-36e9-4c56-aa56-fcf53c1c3c6d)
 
 ### Scan
 
@@ -103,9 +103,11 @@ This allows you to merge scanned documents with files already saved.
 
 This saves all scanned images as a single pdf.
 
-You can choose your filename and output DPI here
+You will first be greeted with a Save As window, in which you can choose the file location to save at.
 
-![image](https://github.com/user-attachments/assets/49556eca-9cb9-4772-80b0-b1bfd3e28cad)
+After selecting a location, you will then be able to set the target DPI. If you exit or cancel the save, the save will be skipped and the DPI option will not be shown.
+
+![image](https://github.com/user-attachments/assets/95fdc6ea-dc6d-4715-9fcf-b357e588ac1f)
 
 ```
 Note:
@@ -123,7 +125,7 @@ The clear button will remove all stored images.
 
 Short of clearing the whole scan storage, you can remove individual pages using the Remove button
 
-![image](https://github.com/user-attachments/assets/21d55736-dcd9-4db6-b58b-321f32d938d1)
+![image](https://github.com/user-attachments/assets/bf4b7b0d-563b-48ee-b8c5-b4eec5480fd9)
 
 ## Contributions
 

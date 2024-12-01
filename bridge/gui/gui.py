@@ -13,7 +13,7 @@ from PyQt6.QtWidgets import (
     QGridLayout,
     QToolBar,
     QPushButton,
-    QLineEdit,
+    QLineEdit, QFileDialog,
 )
 from PyQt6.QtCore import QThread, pyqtSignal, pyqtSlot
 
@@ -94,6 +94,13 @@ class MainWindow(QMainWindow):
         self.scanbutton.triggered.connect(self.perform_scan)
 
         toolBar.addAction(self.scanbutton)
+
+        # load button
+        self.loadbutton = QAction("Load", self)
+        self.loadbutton.setStatusTip("Load a document from file")
+        self.loadbutton.triggered.connect(self.load_image)
+
+        toolBar.addAction(self.loadbutton)
 
         # save button
         self.savebutton = QAction("Save", self)
@@ -235,6 +242,23 @@ class MainWindow(QMainWindow):
         state = self._current_popup.state
         if state:
             self.image_widget.remove_all_images()
+
+    def load_image(self):
+
+        load = QFileDialog()
+        load.DialogLabel("Choose File to Load")
+
+        load.show()
+
+        if load.exec():
+            filenames = load.selectedFiles()
+
+        print(f"loading files:\n{filenames}")
+
+        for file in filenames:
+            with Image.open(file) as imgfile:
+                image = imgfile.copy().convert("RGB")
+            self.scan_complete(image=image)
 
     def save_to_file(self, filename, dpi_target: int = 100):
         """

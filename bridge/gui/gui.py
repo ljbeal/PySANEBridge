@@ -103,7 +103,7 @@ class MainWindow(QMainWindow):
         # clear button
         self.clearbutton = QAction("Clear", self)
         self.clearbutton.setStatusTip("Clears all pages from storage")
-        self.clearbutton.triggered.connect(self.image_widget.remove_all_images)
+        self.clearbutton.triggered.connect(self.clear_images)
 
         toolBar.addAction(self.clearbutton)
 
@@ -215,6 +215,9 @@ class MainWindow(QMainWindow):
         filename = f"{os.path.splitext(filename)[0]}.pdf"  # force pdf
 
         self.save_to_file(filename, dpi_target)
+
+    def clear_images(self):
+        self.image_widget.remove_all_images()
 
     def save_to_file(self, filename, dpi_target: int = 100):
         """

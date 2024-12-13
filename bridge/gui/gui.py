@@ -1,8 +1,7 @@
 """
 UI module
 """
-
-
+import io
 import os
 
 from PIL import Image
@@ -23,6 +22,8 @@ from bridge.gui.subcontainers.pageviewer import PageViewerWidget
 from bridge.scan.scan import Scanner
 from gui.subcontainers.confirmation_popup import ConfirmationWindow
 from gui.subcontainers.question_window import QuestionWindow
+
+import pymupdf as fitz
 
 
 class ScanWorker(QThread):
@@ -259,11 +260,29 @@ class MainWindow(QMainWindow):
         filenames = load.getOpenFileNames()[0]
 
         print(f"loading files:\n{filenames}")
+        try:
+            for file in filenames:
+                # handle pdf files, since they need a renderer
+                # thanks to this answer: https://stackoverflow.com/a/69416971
+                if os.path.splitext(file)[1] == ".pdf":
+                    doc = fitz.open(file)
 
-        for file in filenames:
-            with Image.open(file) as imgfile:
-                image = imgfile.copy().convert("RGB")
-            self.scan_complete(image=image)
+                    for page in doc:
+                        pix = page.get_pixmap(dpi=int(self.settings.get("resolution")))
+                        self.scan_complete(
+                            image=Image.frombytes(
+                                "RGB",
+                                [pix.width, pix.height],
+                                pix.samples
+                            )
+                        )
+                else:
+                    with Image.open(file) as imgfile:
+                        image = imgfile.copy().convert("RGB")
+                    self.scan_complete(image=image)
+        except Exception as ex:
+            print(ex)
+            raise
 
     def save_to_file(self, filename, dpi_target: int = 100):
         """

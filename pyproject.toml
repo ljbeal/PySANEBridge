@@ -16,7 +16,8 @@ dynamic = ['version']
 
 dependencies = [
     "pyqt6",
-    "pillow"
+    "pillow",
+    "pymupdf",
 ]
 
 [build-system]
